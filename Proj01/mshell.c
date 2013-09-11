@@ -24,6 +24,10 @@ int main()
 
         /* Evaluate */
         eval(cmdline);
+
+        /* Wait for continue*/
+        printf("\n\nPress any key to continue...");
+        getchar();
     } 
 }
 /* $end shellmain */
@@ -37,7 +41,7 @@ void eval(char *cmdline)
     int bg;              /* Should the job run in bg or fg? */
     pid_t pid;           /* Process id */
    
-    printf("cmd: %s",cmdline); 
+    //printf("cmd: %s",cmdline); 
     printf(",%d\n",strcmp(cmdline, "quit"));
     if (!strcmp(cmdline, "quit\n")) /* quit command */
     {
