@@ -1,8 +1,11 @@
 
-all : student_message fork project1 interact mshell shellex prog1
+all : student_message fork project1 interact mshell shellex prog1 prog2 prog3 sig
 
 CC = gcc
 CFLAGS = -g 
+
+sig : sig.o csapp.o
+	$(CC) $(CFLAGS) -lpthread -o $@ sig.o csapp.o
 
 interact : interact.o csapp.o
 	$(CC) $(CFLAGS) -lpthread -o $@ interact.o csapp.o
@@ -12,6 +15,12 @@ shellex : shellex.o csapp.o
 
 prog1 : prog1.o csapp.o
 	$(CC) $(CFLAGS) -lpthread -o $@ prog1.o csapp.o
+
+prog2 : prog2.o csapp.o
+	$(CC) $(CFLAGS) -lpthread -o $@ prog2.o csapp.o
+
+prog3 : prog3.o csapp.o
+	$(CC) $(CFLAGS) -lpthread -o $@ prog3.o csapp.o
 
 mshell : mshell.o csapp.o
 	$(CC) $(CFLAGS) -lpthread -o $@ mshell.o csapp.o
@@ -33,4 +42,4 @@ student_message :
 
 .phoney : clean
 clean :
-	rm -f *.o fork project1 mshell shellex prog1
+	rm -f *.o fork project1 mshell shellex prog1 prog2 prog3 sig

@@ -9,10 +9,15 @@
 
 /* function prototypes */
 void eval(char *cmdline);
+void handler(int sig);
+int counter = 0;
 
 int main() 
 {
     char cmdline[MAXLINE]; /* Command line */
+
+    Signal(SIGINT, handler);
+    Signal(SIGTSTP, handler);
 
     while (1) {
         /* Read */
@@ -21,8 +26,12 @@ int main()
         printf("=======START========\n");                   
         printf("Welcome to My Shell!\n");                   
         printf("There is several options avaliable.\n");    
-        printf("1. program 1.\n");                   
-        printf("quit. exit shell.");                 
+        printf("1: checkin.\n");                   
+        printf("2: diagnosis.\n");                   
+        printf("3: checkout.\n");                   
+        printf("help: program 1.\n");                   
+        printf("info: check version and who made it\n");                   
+        printf("quit: exit shell.\n");                 
         printf("========END=========\n");                   
         Fgets(cmdline, MAXLINE, stdin); 
         if (feof(stdin))
@@ -48,7 +57,7 @@ void eval(char *cmdline)
     pid_t pid;           /* Process id */
    
     //printf("cmd: %s",cmdline); 
-    printf(",%d\n",strcmp(cmdline, "quit"));
+    //printf(",%d\n",strcmp(cmdline, "quit"));
     if (!strcmp(cmdline, "quit\n")) /* quit command */
     {
         char passwd[20];
@@ -58,21 +67,58 @@ void eval(char *cmdline)
         }
         printf("\nWrong password!");
     }
-    
-    if (!strcmp(cmdline, "1\n"))    /* Run program 1*/
+    else if (!strcmp(cmdline, "1\n"))    /* Run program 1*/
     {
         printf("cmd 1 received!\n");
-        
+        Sleep(1); 
+        system("clear");
         pid = Fork(); //line:ecf:forkreturn
         if (pid == 0) {  /* Child */
             execve("prog1", NULL, environ);
         }
     }
-
+    else if (!strcmp(cmdline, "2\n"))    /* Run program 1*/
+    {
+        printf("cmd 2 received!\n");
+        
+        Sleep(1); 
+        system("clear");
+        pid = Fork(); //line:ecf:forkreturn
+        if (pid == 0) {  /* Child */
+            execve("prog2", NULL, environ);
+        }
+    }
+    else if (!strcmp(cmdline, "3\n"))    /* Run program 1*/
+    {
+        printf("cmd 3 received!\n");
+        
+        Sleep(1); 
+        system("clear");
+        pid = Fork(); //line:ecf:forkreturn
+        if (pid == 0) {  /* Child */
+            execve("prog3", NULL, environ);
+        }
+    }
+    else if (!strcmp(cmdline, "help\n"))    /* Run program 1*/
+    {
+        Sleep(1); 
+        system("clear");
+        printf("help information!\n");
+    }
+    else if (!strcmp(cmdline, "info\n"))    /* Run program 1*/
+    {
+        Sleep(1); 
+        system("clear");
+        printf("Version: 1.0\n");
+        printf("Author: Yihang Xu\n");
+    }
+    else{
+        printf("no such command!");
+    }
     int status;
     waitpid(pid, &status, 0);
-    if (errno != ECHILD)
-        unix_error("waitfg: waitpid error");
+    //if (errno != ECHILD)
+    //    unix_error("waitfg: waitpid error");
 
     return;
 }
@@ -84,7 +130,7 @@ int getpasswd(char* passwd, int size)
    int c;  
    int n = 0;  
     
-   printf("Please Input password:");  
+   printf("Please Input password:\n");  
     
    set_disp_mode(STDIN_FILENO,0);
    do{  
@@ -117,4 +163,12 @@ int set_disp_mode(int fd,int option)
         return 1;  
    }  
    return 0;  
+}
+
+ 
+void handler(int sig)
+{
+counter++;
+printf("sig!"); /* Do some work in the handler */
+return;
 } 

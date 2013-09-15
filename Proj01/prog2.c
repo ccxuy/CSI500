@@ -2,7 +2,7 @@
 
 int main(int argc, char *arg[])
 {
-  printf("\nCheckin patient....");
+  printf("\nChecking patient's situation....");
   printf("\nPlease wait...");
-  printf("\nSuccess!!");
+  printf("\nYou are sick!!");
 }
