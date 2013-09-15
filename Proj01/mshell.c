@@ -1,5 +1,10 @@
 /* $begin shellmain */
 #include "csapp.h"
+#include <stdio.h>  
+#include <termios.h>  
+#include <unistd.h>  
+#include <errno.h>  
+#define ECHOFLAGS (ECHO | ECHOE | ECHOK | ECHONL)  
 #define MAXARGS   128
 
 /* function prototypes */
@@ -17,6 +22,7 @@ int main()
         printf("Welcome to My Shell!\n");                   
         printf("There is several options avaliable.\n");    
         printf("1. program 1.\n");                   
+        printf("quit. exit shell.");                 
         printf("========END=========\n");                   
         Fgets(cmdline, MAXLINE, stdin); 
         if (feof(stdin))
@@ -26,7 +32,7 @@ int main()
         eval(cmdline);
 
         /* Wait for continue*/
-        printf("\n\nPress any key to continue...");
+        printf("\n\nPress ENTER key to continue...");
         getchar();
     } 
 }
@@ -45,7 +51,12 @@ void eval(char *cmdline)
     printf(",%d\n",strcmp(cmdline, "quit"));
     if (!strcmp(cmdline, "quit\n")) /* quit command */
     {
-        exit(0);
+        char passwd[20];
+        getpasswd(passwd, sizeof(passwd));
+        if(!strcmp(passwd, "IAmTheBoss\n")){
+            exit(0);
+        }
+        printf("\nWrong password!");
     }
     
     if (!strcmp(cmdline, "1\n"))    /* Run program 1*/
@@ -60,8 +71,50 @@ void eval(char *cmdline)
 
     int status;
     waitpid(pid, &status, 0);
-    //unix_error("waitfg: waitpid error");
+    if (errno != ECHILD)
+        unix_error("waitfg: waitpid error");
 
     return;
 }
 /* $end eval */
+
+
+int getpasswd(char* passwd, int size)  
+{  
+   int c;  
+   int n = 0;  
+    
+   printf("Please Input password:");  
+    
+   set_disp_mode(STDIN_FILENO,0);
+   do{  
+      c=getchar();  
+      if (c != '\n'|c!='\r'){  
+         passwd[n++] = c;  
+      }  
+   }while(c != '\n' && c !='\r' && n < (size - 1));  
+   passwd[n] = '\0';  
+   set_disp_mode(STDIN_FILENO,1);
+   return n;  
+}
+
+
+int set_disp_mode(int fd,int option)  
+{  
+   int err;  
+   struct termios term;  
+   if(tcgetattr(fd,&term)==-1){  
+     perror("Cannot get the attribution of the terminal");  
+     return 1;  
+   }  
+   if(option)  
+        term.c_lflag|=ECHOFLAGS;  
+   else  
+        term.c_lflag &=~ECHOFLAGS;  
+   err=tcsetattr(fd,TCSAFLUSH,&term);  
+   if(err==-1 && err==EINTR){  
+        perror("Cannot set the attribution of the terminal");  
+        return 1;  
+   }  
+   return 0;  
+} 
