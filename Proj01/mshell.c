@@ -170,7 +170,7 @@ int set_disp_mode(int fd,int option)
  
 void handler(int sig)
 {
-counter++;
-printf(""); /* Do some work in the handler */
-return;
+    counter++;
+    printf(""); /* Do some work in the handler */
+    return;
 } 
