@@ -1,9 +1,6 @@
 /* $begin shellmain */
 #include "csapp.h"
-#include <stdio.h>  
 #include <termios.h>  
-#include <unistd.h>  
-#include <errno.h>  
 #define ECHOFLAGS (ECHO | ECHOE | ECHOK | ECHONL)  
 #define MAXARGS   128
 
@@ -24,8 +21,8 @@ int main()
         system("clear");
         printf("\n");                   
         printf("=======START========\n");                   
-        printf("Welcome to My Shell!\n");                   
-        printf("There is several options avaliable.\n");    
+        printf("Welcome to My Hospital!\n");                   
+        printf("There are several options avaliable.\n");    
         printf("1: checkin.\n");                   
         printf("2: diagnosis.\n");                   
         printf("3: checkout.\n");                   
@@ -103,7 +100,12 @@ void eval(char *cmdline)
     {
         Sleep(1); 
         system("clear");
-        printf("help information!\n");
+        printf("help information:\n");
+        printf("Type 1 first to checkin a patient.\n");
+        printf("Then type 2 to diagnosis the patient.\n");
+        printf("Afterwards, type 3 to checkout the patient.\n");
+        printf("\n");
+        printf("If you want to quit, type \"quit\" and then type password \"IAmTheBoss\"\n");
     }
     else if (!strcmp(cmdline, "info\n"))    /* Run program 1*/
     {
@@ -169,6 +171,6 @@ int set_disp_mode(int fd,int option)
 void handler(int sig)
 {
 counter++;
-printf("sig!"); /* Do some work in the handler */
+printf(""); /* Do some work in the handler */
 return;
 } 
